@@ -225,7 +225,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 11.3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -535,7 +535,6 @@ GameObject:
   - component: {fileID: 1375032159}
   - component: {fileID: 1375032158}
   - component: {fileID: 1375032162}
-  - component: {fileID: 1375032163}
   m_Layer: 0
   m_Name: Ghost
   m_TagString: Untagged
@@ -556,8 +555,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 0.5
+  m_AngularDamping: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -566,9 +565,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!23 &1375032159
 MeshRenderer:
@@ -636,7 +635,7 @@ Transform:
   m_GameObject: {fileID: 1375032157}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 10.73, z: -9.95}
+  m_LocalPosition: {x: 0, y: -1.08, z: -9.95}
   m_LocalScale: {x: 1, y: 2.0972, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -654,24 +653,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ce8c0f6523ca04682eb72941067cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 100
-  maxVelocity: 5
-  damping: 5
---- !u!114 &1375032163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1375032157}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89ce8c0f6523ca04682eb72941067cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 20
-  maxVelocity: 5
-  damping: 5
+  moveSpeed: 8
+  maxVelocity: 4
+  damping: 10
+  dashForce: 200
+  dashDuration: 0.2
+  dashCooldown: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
