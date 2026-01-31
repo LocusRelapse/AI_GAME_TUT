@@ -2,22 +2,25 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    // Текущее здоровье игрока
-    public int currentHealth = 100;
-
     // Метод получения урона
     public void TakeDamage(int damage)
     {
-        // Уменьшаем здоровье
-        currentHealth -= damage;
-
-        // Выводим текущее здоровье в консоль
-        Debug.Log("Health: " + currentHealth);
-
-        // Проверяем смерть игрока
-        if (currentHealth <= 0)
+        if (GameManager.Instance == null)
         {
-            Debug.Log("Игрок мёртв");
+            Debug.LogWarning("GameManager.Instance не найден!");
+            return;
+        }
+
+        // Теряем одну жизнь при каждом уроне
+        GameManager.Instance.LoseLife();
+
+        Debug.Log("Lives: " + GameManager.Instance.playerLives);
+
+        // Проверка Game Over
+        if (GameManager.Instance.playerLives <= 0)
+        {
+            Debug.Log("Game Over");
+            GameManager.Instance.GameOver();
         }
     }
 }

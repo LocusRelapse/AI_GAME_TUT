@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class Collectible : MonoBehaviour
 {
+    // Сколько очков даёт предмет
     public int scoreValue = 1;
 
     private AudioSource audioSource;
@@ -11,20 +12,31 @@ public class Collectible : MonoBehaviour
 
     private void Awake()
     {
+        // Получаем AudioSource на объекте
         audioSource = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        // Защита от повторного срабатывания
         if (collected) return;
+
+        // Проверяем, что вошёл игрок
         if (!other.CompareTag("Player")) return;
 
         collected = true;
 
-        // Увеличиваем счёт
-        GameManager.Score += scoreValue;
+        // Увеличиваем счёт ЧЕРЕЗ GameManager
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(scoreValue);
+        }
+        else
+        {
+            Debug.LogWarning("GameManager.Instance не найден!");
+        }
 
-        // Проигрываем звук, если он есть
+        // Проигрываем звук и уничтожаем объект
         if (audioSource != null && audioSource.clip != null)
         {
             audioSource.Play();
