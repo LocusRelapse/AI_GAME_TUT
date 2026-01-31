@@ -1,11 +1,16 @@
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(AudioSource))]
 public class Collectible : MonoBehaviour
 {
+    // Событие, вызываемое при добавлении очков
+    // Передаёт количество полученных очков
+    public static event Action<int> OnScoreAdded;
+
     // Сколько очков даёт предмет
-    public int scoreValue = 1;
+    public int scoreValue = 10;
 
     private AudioSource audioSource;
     private bool collected = false;
@@ -26,15 +31,8 @@ public class Collectible : MonoBehaviour
 
         collected = true;
 
-        // Увеличиваем счёт ЧЕРЕЗ GameManager
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.AddScore(scoreValue);
-        }
-        else
-        {
-            Debug.LogWarning("GameManager.Instance не найден!");
-        }
+        // Сообщаем о получении очков через событие
+        OnScoreAdded?.Invoke(scoreValue);
 
         // Проигрываем звук и уничтожаем объект
         if (audioSource != null && audioSource.clip != null)

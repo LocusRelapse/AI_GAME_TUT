@@ -1,26 +1,35 @@
 using UnityEngine;
+using System;
 
 public class PlayerHealth : MonoBehaviour
 {
+    // Текущее здоровье игрока (скрытое, изменяется только внутри класса)
+    [SerializeField]
+    private int currentHealth = 100;
+
+    // Событие, вызываемое при изменении здоровья
+    // Передаёт новое значение здоровья
+    public static event Action<int> OnHealthChanged;
+
+    // Событие, вызываемое при смерти игрока
+    public static event Action OnPlayerDeath;
+
     // Метод получения урона
     public void TakeDamage(int damage)
     {
-        if (GameManager.Instance == null)
+        // Уменьшаем здоровье
+        currentHealth -= damage;
+
+        // Сообщаем всем подписчикам новое значение здоровья
+        OnHealthChanged?.Invoke(currentHealth);
+
+        // Проверяем смерть игрока
+        if (currentHealth <= 0)
         {
-            Debug.LogWarning("GameManager.Instance не найден!");
-            return;
-        }
+            Debug.Log("Игрок мёртв");
 
-        // Теряем одну жизнь при каждом уроне
-        GameManager.Instance.LoseLife();
-
-        Debug.Log("Lives: " + GameManager.Instance.playerLives);
-
-        // Проверка Game Over
-        if (GameManager.Instance.playerLives <= 0)
-        {
-            Debug.Log("Game Over");
-            GameManager.Instance.GameOver();
+            // Сообщаем о смерти игрока
+            OnPlayerDeath?.Invoke();
         }
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -6,65 +7,90 @@ public class GameManager : MonoBehaviour
     // Синглтон
     public static GameManager Instance;
 
-    // Игровые данные
-    public int currentScore = 0;
-    public int playerLives = 3;
-
     // UI
+    public TMP_Text healthText;
     public TMP_Text scoreText;
-    public TMP_Text livesText;
+
+    // Счёт
+    private int currentScore = 0;
+
+    // Сколько карточек нужно для победы
+    public int cardsToWin = 5;
 
     private void Awake()
-{
-    Debug.Log("GameManager Awake: " + gameObject.name);
-
-    if (Instance != null && Instance != this)
     {
-        Destroy(gameObject);
-        return;
+        // Логика синглтона
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
     }
-
-    Instance = this;
-
-    UpdateUI();
-}
-
 
     private void Start()
     {
-        // Обновляем UI при старте сцены
-        UpdateUI();
+        // Подписка на события здоровья игрока
+        PlayerHealth.OnHealthChanged += UpdateHealthUI;
+        PlayerHealth.OnPlayerDeath += HandleGameOver;
+
+        // Подписка на событие сбора очков
+        Collectible.OnScoreAdded += AddScore;
     }
 
-    // Добавление очков
-    public void AddScore(int value)
+    private void OnDestroy()
     {
-        Debug.Log("AddScore вызван у: " + gameObject.name);
-
-        currentScore += value;
-        UpdateUI();
+        // Отписка от событий
+        PlayerHealth.OnHealthChanged -= UpdateHealthUI;
+        PlayerHealth.OnPlayerDeath -= HandleGameOver;
+        Collectible.OnScoreAdded -= AddScore;
     }
 
-    // Потеря жизни
-    public void LoseLife()
+    // Обновление UI здоровья
+    private void UpdateHealthUI(int newHealth)
     {
-        playerLives--;
-        UpdateUI();
+        if (healthText != null)
+        {
+            healthText.text = "Health: " + newHealth;
+        }
     }
 
-    // Обновление UI
-    public void UpdateUI()
+    // Добавление очков и обновление UI
+    private void AddScore(int points)
     {
+        currentScore += points;
+
         if (scoreText != null)
+        {
             scoreText.text = "Score: " + currentScore;
+        }
 
-        if (livesText != null)
-            livesText.text = "Lives: " + playerLives;
+        Debug.Log("Score: " + currentScore);
+
+        if (currentScore >= cardsToWin)
+        {
+            HandleWin();
+        }
     }
 
-    // Заглушка под будущую логику
-    public void GameOver()
+    // Проигрыш
+    private void HandleGameOver()
     {
-        Debug.Log("GameManager.GameOver() вызван");
+        Debug.Log("===== GAME OVER =====");
+        Invoke("RestartLevel", 2f);
+    }
+
+    // Победа
+    private void HandleWin()
+    {
+        Debug.Log("===== YOU WIN! =====");
+        Invoke("RestartLevel", 2f);
+    }
+
+    // Перезапуск текущей сцены
+    private void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
