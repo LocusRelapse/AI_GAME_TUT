@@ -2,98 +2,80 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
+
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
 {
-    // Обычное ускорение движения
     public float moveSpeed = 8f;
-
-    // Максимальная скорость обычного движения
     public float maxVelocity = 4f;
-
-    // Плавность торможения
     public float damping = 10f;
 
-    // Ускорение во время рывка
     public float dashForce = 30f;
-
-    // Длительность рывка в секундах
     public float dashDuration = 1f;
-
-    // Кулдаун рывка
     public float dashCooldown = 2f;
 
+    public SpriteRenderer spriteRenderer;
+
     private Rigidbody2D rb;
+    private Animator animator;
     private Vector2 input;
 
-    // Флаги и таймеры рывка
-    private bool isDashing = false;
+    private bool isDashing;
     private float dashEndTime;
     private float lastDashTime;
 
     private void Awake()
     {
-        // Получаем Rigidbody2D
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
+{
+    input = Vector2.zero;
+    var kb = Keyboard.current;
+    if (kb == null) return;
+
+    if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) input.x = -1;
+    if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) input.x = 1;
+    if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y = 1;
+    if (kb.sKey.isPressed || kb.downArrowKey.isPressed) input.y = -1;
+
+    input = input.normalized;
+
+    // ---------- ANIMATOR ----------
+    animator.SetBool("IsMoving", input != Vector2.zero);
+    animator.SetFloat("VelocityX", input.x);
+    animator.SetFloat("VelocityY", input.y);
+
+    // ---------- FLIP ТОЛЬКО ДЛЯ SIDE ----------
+    if (input.x != 0 && Mathf.Abs(input.y) < 0.01f)
     {
-        input = Vector2.zero;
-
-        var keyboard = Keyboard.current;
-        if (keyboard == null) return;
-
-        // Считываем направление движения
-        if (keyboard.aKey.isPressed || keyboard.leftArrowKey.isPressed)
-            input.x -= 1f;
-        if (keyboard.dKey.isPressed || keyboard.rightArrowKey.isPressed)
-            input.x += 1f;
-        if (keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed)
-            input.y -= 1f;
-        if (keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed)
-            input.y += 1f;
-
-        // Нормализуем ввод
-        input = input.normalized;
-
-        // Нажатие Shift — попытка начать рывок
-        if ((keyboard.leftShiftKey.wasPressedThisFrame ||
-             keyboard.rightShiftKey.wasPressedThisFrame))
-        {
-            TryStartDash();
-        }
-
-        // Проверяем окончание рывка по времени
-        if (isDashing && Time.time >= dashEndTime)
-        {
-            isDashing = false;
-        }
+        spriteRenderer.flipX = input.x < 0;
     }
+}
+
 
     private void FixedUpdate()
     {
         if (isDashing)
         {
-            // Во время рывка постоянно прикладываем сильное ускорение
             rb.AddForce(input * dashForce, ForceMode2D.Force);
             return;
         }
 
         if (input != Vector2.zero)
         {
-            // Обычное плавное движение
             rb.AddForce(input * moveSpeed, ForceMode2D.Force);
-
-            // Ограничиваем максимальную скорость
             if (rb.linearVelocity.magnitude > maxVelocity)
-            {
                 rb.linearVelocity = rb.linearVelocity.normalized * maxVelocity;
-            }
         }
         else
         {
-            // Плавная остановка
             rb.linearVelocity = Vector2.Lerp(
                 rb.linearVelocity,
                 Vector2.zero,
@@ -104,18 +86,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void TryStartDash()
     {
-        // Нельзя начать рывок без направления
         if (input == Vector2.zero) return;
-
-        // Проверяем кулдаун
         if (Time.time - lastDashTime < dashCooldown) return;
 
-        // Запускаем рывок
         isDashing = true;
         lastDashTime = Time.time;
         dashEndTime = Time.time + dashDuration;
-
-        // Сбрасываем текущую скорость, чтобы рывок был отчетливым
         rb.linearVelocity = Vector2.zero;
     }
 }
