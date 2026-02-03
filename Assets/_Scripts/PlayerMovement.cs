@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
-
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
 public class PlayerMovement : MonoBehaviour
@@ -35,30 +34,41 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Update()
-{
-    input = Vector2.zero;
-    var kb = Keyboard.current;
-    if (kb == null) return;
-
-    if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) input.x = -1;
-    if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) input.x = 1;
-    if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y = 1;
-    if (kb.sKey.isPressed || kb.downArrowKey.isPressed) input.y = -1;
-
-    input = input.normalized;
-
-    // ---------- ANIMATOR ----------
-    animator.SetBool("IsMoving", input != Vector2.zero);
-    animator.SetFloat("VelocityX", input.x);
-    animator.SetFloat("VelocityY", input.y);
-
-    // ---------- FLIP ТОЛЬКО ДЛЯ SIDE ----------
-    if (input.x != 0 && Mathf.Abs(input.y) < 0.01f)
     {
-        spriteRenderer.flipX = input.x < 0;
-    }
-}
+        input = Vector2.zero;
+        var kb = Keyboard.current;
+        if (kb == null) return;
 
+        if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) input.x = -1;
+        if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) input.x = 1;
+        if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y = 1;
+        if (kb.sKey.isPressed || kb.downArrowKey.isPressed) input.y = -1;
+
+        input = input.normalized;
+
+        // ---------- DASH INPUT ----------
+        if (kb.leftShiftKey.wasPressedThisFrame || kb.rightShiftKey.wasPressedThisFrame)
+        {
+            TryStartDash();
+        }
+
+        // ---------- DASH END ----------
+        if (isDashing && Time.time >= dashEndTime)
+        {
+            isDashing = false;
+        }
+
+        // ---------- ANIMATOR ----------
+        animator.SetBool("IsMoving", input != Vector2.zero);
+        animator.SetFloat("VelocityX", input.x);
+        animator.SetFloat("VelocityY", input.y);
+
+        // ---------- FLIP ТОЛЬКО ДЛЯ SIDE ----------
+        if (input.x != 0 && Mathf.Abs(input.y) < 0.01f)
+        {
+            spriteRenderer.flipX = input.x < 0;
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -71,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         if (input != Vector2.zero)
         {
             rb.AddForce(input * moveSpeed, ForceMode2D.Force);
+
             if (rb.linearVelocity.magnitude > maxVelocity)
                 rb.linearVelocity = rb.linearVelocity.normalized * maxVelocity;
         }
@@ -92,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = true;
         lastDashTime = Time.time;
         dashEndTime = Time.time + dashDuration;
+
         rb.linearVelocity = Vector2.zero;
     }
 }
