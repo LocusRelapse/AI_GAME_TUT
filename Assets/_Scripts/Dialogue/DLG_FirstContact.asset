@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef1feb41a7a33647bf7c2a7f08fe275, type: 3}
+  m_Name: DLG_FirstContact
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueNodes:
+  - characterName: "\u041E\u0425\u0420\u0410\u041D\u041D\u0418\u041A"
+    characterPortrait: {fileID: -7795914766650792373, guid: 47b51de1127b4af41beea02a86c0396e, type: 3}
+    dialogueText: "\u0412\u044B \u043F\u043E\u043C\u043D\u0438\u0442\u0435 \u0434\u0430\u0442\u0443
+      \u0438\u043D\u0446\u0438\u0434\u0435\u043D\u0442\u0430? \u0414\u0432\u0430\u0434\u0446\u0430\u0442\u044C
+      \u0441\u0435\u0434\u044C\u043C\u043E\u0435 \u043D\u043E\u044F\u0431\u0440\u044F,
+      1989."
+    voiceOverClip: {fileID: 8300000, guid: 1d3730ff6da9d9c4a8ec548f1c0188dd, type: 3}
+  - characterName: "\u041F\u0440\u0438\u0437\u0440\u0430\u043A-\u0443\u0447\u0435\u043D\u044B\u0439"
+    characterPortrait: {fileID: 3094370911615090777, guid: 770264c6a3542414db8579b94abfe5d3, type: 3}
+    dialogueText: "\u041F\u043E\u043C\u043D\u044E. \u042D\u0442\u043E \u0431\u044B\u043B
+      \u043C\u043E\u0439 \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442"
+    voiceOverClip: {fileID: 0}
+  - characterName: "\u041F\u0440\u0438\u0437\u0440\u0430\u043A-\u0443\u0447\u0435\u043D\u044B\u0439"
+    characterPortrait: {fileID: 1563356428093714710, guid: 0f1b14e6acb322e42a3bdc2ba98beba8, type: 3}
+    dialogueText: "\u042F \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043F\u043E\u043C\u043D\u044E.
+      \u0427\u0442\u043E \u0441\u043B\u0443\u0447\u0438\u043B\u043E\u0441\u044C?"
+    voiceOverClip: {fileID: 0}
