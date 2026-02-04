@@ -24,9 +24,9 @@ MonoBehaviour:
     characterPortrait: {fileID: 3094370911615090777, guid: 770264c6a3542414db8579b94abfe5d3, type: 3}
     dialogueText: "\u041F\u043E\u043C\u043D\u044E. \u042D\u0442\u043E \u0431\u044B\u043B
       \u043C\u043E\u0439 \u044D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442"
-    voiceOverClip: {fileID: 0}
+    voiceOverClip: {fileID: 8300000, guid: 1d3730ff6da9d9c4a8ec548f1c0188dd, type: 3}
   - characterName: "\u041F\u0440\u0438\u0437\u0440\u0430\u043A-\u0443\u0447\u0435\u043D\u044B\u0439"
     characterPortrait: {fileID: 1563356428093714710, guid: 0f1b14e6acb322e42a3bdc2ba98beba8, type: 3}
     dialogueText: "\u042F \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043F\u043E\u043C\u043D\u044E.
       \u0427\u0442\u043E \u0441\u043B\u0443\u0447\u0438\u043B\u043E\u0441\u044C?"
-    voiceOverClip: {fileID: 0}
+    voiceOverClip: {fileID: 8300000, guid: 1d3730ff6da9d9c4a8ec548f1c0188dd, type: 3}

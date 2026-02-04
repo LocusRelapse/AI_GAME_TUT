@@ -11,12 +11,14 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text dialogueText;
     public TMP_Text nameText;
 
+    [Header("Audio")]
+    public AudioSource voiceSource; // ТОЛЬКО источник, не клипы
+
     private DialogueData currentDialogue;
     private int currentNodeIndex;
 
     void Awake()
     {
-        // ВАЖНО: именно Awake, а не Start
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
     }
@@ -54,10 +56,22 @@ public class DialogueManager : MonoBehaviour
 
         var node = currentDialogue.dialogueNodes[index];
 
+        // UI
         nameText.text = node.characterName;
         dialogueText.text = node.dialogueText;
         portraitImage.sprite = node.characterPortrait;
-    
+
+        // 🔊 VOICE OVER ИЗ НОДЫ
+        if (voiceSource != null)
+        {
+            voiceSource.Stop();
+
+            if (node.voiceOverClip != null)
+            {
+                voiceSource.clip = node.voiceOverClip;
+                voiceSource.Play();
+            }
+        }
     }
 
     void ShowNextNode()
@@ -76,6 +90,9 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        if (voiceSource != null)
+            voiceSource.Stop();
+
         dialoguePanel.SetActive(false);
         currentDialogue = null;
     }
